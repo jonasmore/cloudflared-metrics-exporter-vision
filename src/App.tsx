@@ -103,7 +103,7 @@ function App() {
               <ThemeToggle />
             </div>
             <a
-              href="https://github.com/jonasmore/"
+              href="https://github.com/jonasmore/cloudflared-metrics-exporter-vision"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center space-x-2 px-3 py-2 rounded-md bg-muted hover:bg-muted/80 transition-colors text-sm"
