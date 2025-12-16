@@ -2,7 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { MetricSeries } from '@/types/metrics';
 import { formatLabels } from '@/utils/metricsParser';
-import { X } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 
 interface MetricTableModalProps {
   series: MetricSeries[];
@@ -38,6 +38,38 @@ export function MetricTableModal({ series, title, onClose }: MetricTableModalPro
     );
   }, [series]);
 
+  // Export to CSV function
+  const handleExportCSV = () => {
+    // Create CSV header
+    const headers = ['Timestamp', 'Series', 'Labels', 'Value'];
+    const csvRows = [headers.join(',')];
+
+    // Add data rows
+    allRows.forEach((row) => {
+      const csvRow = [
+        row.timestamp.toISOString(),
+        `"${row.seriesName}"`,
+        `"${row.labels}"`,
+        row.value,
+      ];
+      csvRows.push(csvRow.join(','));
+    });
+
+    // Create blob and download
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_data.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const rowVirtualizer = useVirtualizer({
     count: allRows.length,
     getScrollElement: () => parentRef.current,
@@ -54,13 +86,23 @@ export function MetricTableModal({ series, title, onClose }: MetricTableModalPro
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b bg-card rounded-t-lg z-10">
           <h2 className="text-xl font-semibold">{title} - Data Table</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-muted rounded-md transition-colors"
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExportCSV}
+              className="flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors text-sm font-medium"
+              aria-label="Export to CSV"
+            >
+              <Download className="h-4 w-4" />
+              <span>Export CSV</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-muted rounded-md transition-colors"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         {/* Table Header */}

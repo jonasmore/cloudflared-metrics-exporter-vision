@@ -37,6 +37,17 @@ export function FileUpload({ onFileLoad }: FileUploadProps) {
       return;
     }
 
+    // Check file size (warn if > 50MB)
+    const fileSizeMB = file.size / (1024 * 1024);
+    if (fileSizeMB > 50) {
+      const proceed = confirm(
+        `This file is ${fileSizeMB.toFixed(1)}MB. Large files may cause performance issues or browser slowdowns.\n\nDo you want to continue?`
+      );
+      if (!proceed) {
+        return;
+      }
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result as string;

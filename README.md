@@ -8,9 +8,9 @@
   **[🚀 Live Demo](https://cloudflared-metrics-exporter-vision.jonasmore.dev)**
   
   🔒 **Privacy First**: All data is processed locally in your browser. No data is uploaded or leaves your device.
-</div>
 
-![Cloudflared Metrics Exporter Vision](https://img.shields.io/badge/React-18.3-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue) ![Vite](https://img.shields.io/badge/Vite-5.1-purple)
+  [![React](https://img.shields.io/badge/React-18.3-61dafb?logo=react&logoColor=white)](https://reactjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/Vite-5.1-646cff?logo=vite&logoColor=white)](https://vitejs.dev/) [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-06b6d4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+</div>
 
 ## Features
 
@@ -19,9 +19,16 @@
 - 📊 **Interactive charts** powered by Recharts
 - 📁 **Drag-and-drop** file upload
 - 🏷️ **Automatic categorization** of metrics into logical groups
-- 📈 **Multiple chart types** for different metric types
+- 📈 **Multiple chart types** for different metric types (Line, Bar, Scatter)
 - 🎯 **Label support** for multi-series metrics
+- ⭐ **Favorites** - Star your most important metrics for quick access
+- 📤 **CSV Export** - Export chart data and tables to CSV format
+- 📱 **Mobile responsive** - Collapsible sidebar for mobile devices
+- 🔍 **Search & filter** - Find metrics quickly with search
+- 📊 **Data table view** - View raw data in a virtualized table
+- 🎚️ **View modes** - Toggle between cumulative and delta views for counters
 - ⚡ **Fast and responsive** built with React + Vite
+- 🔒 **Privacy first** - All data processed locally in your browser
 
 ## Quick Start
 

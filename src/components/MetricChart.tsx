@@ -26,7 +26,7 @@ import {
   calculateDelta 
 } from '@/utils/chartSettings';
 import { MetricTableModal } from './MetricTableModal';
-import { LineChart as LineChartIcon, BarChart3, ScatterChart as ScatterChartIcon, Table2, TrendingUp, Activity, List, Star } from 'lucide-react';
+import { LineChart as LineChartIcon, BarChart3, ScatterChart as ScatterChartIcon, Table2, TrendingUp, Activity, List, Star, Download } from 'lucide-react';
 
 interface MetricChartProps {
   series: MetricSeries[];
@@ -229,6 +229,40 @@ export function MetricChart({ series, title, onTimeRangeSelect }: MetricChartPro
     
     // Dispatch custom event to notify other components
     window.dispatchEvent(new CustomEvent('favoritesChanged'));
+  };
+
+  // Export chart data to CSV
+  const handleExportCSV = () => {
+    // Create CSV header
+    const headers = ['Timestamp', 'Series', 'Labels', 'Value'];
+    const csvRows = [headers.join(',')];
+
+    // Add data rows from all series
+    processedSeries.forEach((s) => {
+      s.data.forEach((point) => {
+        const csvRow = [
+          point.timestamp.toISOString(),
+          `"${s.name}"`,
+          `"${formatLabels(s.labels) || '-'}"`,
+          point.value,
+        ];
+        csvRows.push(csvRow.join(','));
+      });
+    });
+
+    // Create blob and download
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_data.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const renderChart = () => {
@@ -454,17 +488,26 @@ export function MetricChart({ series, title, onTimeRangeSelect }: MetricChartPro
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-lg">{title}</CardTitle>
-                <button
-                  onClick={toggleFavorite}
-                  className={`p-1 rounded transition-colors ${
-                    isFavorite ? 'text-yellow-500 hover:text-yellow-600' : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                >
-                  <Star className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
-                </button>
+              <div className="inline">
+                <CardTitle className="text-lg inline">{title}</CardTitle>
+                <span className="inline-flex items-center gap-1 ml-2 align-text-bottom">
+                  <button
+                    onClick={toggleFavorite}
+                    className={`p-1 rounded transition-colors ${
+                      isFavorite ? 'text-yellow-500 hover:text-yellow-600' : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                    title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                  >
+                    <Star className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
+                  </button>
+                  <button
+                    onClick={handleExportCSV}
+                    className="p-1 rounded transition-colors text-muted-foreground hover:text-foreground"
+                    title="Export to CSV"
+                  >
+                    <Download className="h-4 w-4" />
+                  </button>
+                </span>
               </div>
               <CardDescription className="text-xs space-y-1">
                 <div>{metricType} • {series.length} series{metricUnit ? ` • Unit: ${metricUnit}` : ''}</div>
