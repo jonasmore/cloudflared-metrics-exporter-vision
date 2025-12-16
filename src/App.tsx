@@ -1,16 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FileUpload } from './components/FileUpload';
 import { Dashboard } from './components/Dashboard';
 import { ThemeToggle } from './components/ThemeToggle';
 import { parseJSONL } from './utils/metricsParser';
 import { ParsedMetrics } from './types/metrics';
-import { AlertCircle, Activity, Database, Clock, Github, Star } from 'lucide-react';
+import { AlertCircle, Activity, Database, Clock, Github, Star, Menu, X } from 'lucide-react';
 
 function App() {
   const [metrics, setMetrics] = useState<ParsedMetrics | null>(null);
   const [filename, setFilename] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+
+  // Close sidebar on mobile by default
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+    
+    // Set initial state
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleFileLoad = (content: string, name: string) => {
     try {
@@ -26,21 +44,45 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background flex">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <aside className="w-64 border-r bg-card flex-shrink-0 sticky top-0 h-screen">
+      <aside className={`
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed lg:sticky top-0 left-0 z-50 lg:z-0
+        w-64 h-screen border-r bg-card flex-shrink-0
+        transition-transform duration-300 ease-in-out
+        lg:translate-x-0
+      `}>
         <div className="h-screen flex flex-col">
           {/* Logo */}
           <div className="p-4 border-b">
-            <div className="flex items-center space-x-3">
-              <img 
-                src="/logo.png" 
-                alt="Cloudflared Logo" 
-                className="h-8 w-8 object-contain"
-              />
-              <div className="flex-1 min-w-0">
-                <h1 className="text-sm font-semibold truncate">Metrics Visualizer</h1>
-                <p className="text-xs text-muted-foreground truncate">cloudflared</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3 flex-1 min-w-0">
+                <img 
+                  src="/logo.png" 
+                  alt="Cloudflared Logo" 
+                  className="h-8 w-8 object-contain"
+                />
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-sm font-semibold truncate">Metrics Visualizer</h1>
+                  <p className="text-xs text-muted-foreground truncate">cloudflared</p>
+                </div>
               </div>
+              {/* Close button for mobile */}
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="lg:hidden p-2 hover:bg-accent rounded-md transition-colors"
+                aria-label="Close menu"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
           </div>
 
@@ -120,6 +162,14 @@ function App() {
         {/* Top Bar */}
         <header className="h-14 border-b bg-card px-6 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center space-x-4">
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-2 hover:bg-accent rounded-md transition-colors"
+              aria-label="Toggle menu"
+            >
+              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
             <h2 className="text-lg font-semibold">
               {metrics ? 'Metrics Dashboard' : 'Upload Metrics'}
             </h2>
