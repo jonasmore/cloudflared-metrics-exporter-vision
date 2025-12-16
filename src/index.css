@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Cloudflare Brand Colors - Light Mode */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 22 92% 54%; /* Tangerine #F6821F */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 33 96% 62%; /* Mango #FBAD41 */
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 10 100% 60%; /* Ruby #FF6633 */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 348 89% 50%; /* Raspberry #CE2F55 */
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 22 92% 54%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Cloudflare Brand Colors - Dark Mode */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 22 92% 54%; /* Tangerine #F6821F */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 33 96% 62%; /* Mango #FBAD41 */
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 10 100% 60%; /* Ruby #FF6633 */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 348 89% 50%; /* Raspberry #CE2F55 */
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 22 92% 54%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
