@@ -2,5 +2,7 @@ name = "cloudflared-metrics-exporter-vision"
 main = "worker/index.ts"
 compatibility_date = "2025-12-16"
 
-[site]
-bucket = "./dist"
+# Assets configuration for serving static files
+[assets]
+directory = "./dist"
+binding = "ASSETS"
